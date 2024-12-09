@@ -9,12 +9,10 @@ on:
       - main
 
 jobs:
-  terraform:
-    name: Deploy Terraform
+  # Job for Terraform Init and Plan
+  plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
-    environment:
-      name: production # Replace with your environment name
-      # Requires environment approval in GitHub settings
 
     steps:
       # Checkout the repository
@@ -24,6 +22,8 @@ jobs:
       # Setup Terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.6
 
       # Authenticate to Azure
       - name: Azure Login
@@ -35,7 +35,7 @@ jobs:
       - name: Terraform Init
         run: terraform init -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}" \
                             -backend-config="container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}" \
-                            -backend-config="key=${{ secrets.TF_STATE_KEY }}" \
+                            -backend-config="key=demo.tfstate" \
                             -backend-config="access_key=${{ secrets.AZURE_STORAGE_ACCESS_KEY }}"
 
       # Plan Terraform
@@ -47,7 +47,45 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
-      # Apply Terraform (protected by environment approval)
+      # Save the Terraform Plan
+      - name: Upload Plan for Apply
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan
+          path: tfplan
+
+  # Job for Terraform Apply, requires approval
+  apply:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+    needs: plan
+    environment:
+      name: production # Requires manual approval for this job
+    steps:
+      # Download the Terraform Plan
+      - name: Download Plan
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan
+
+      # Setup Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.6
+
+      # Authenticate to Azure
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_AUTHENTICATION }}
+      # Initialize Terraform
+      - name: Terraform Init
+        run: terraform init -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}" \
+                            -backend-config="container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}" \
+                            -backend-config="key=demo.tfstate" \
+                            -backend-config="access_key=${{ secrets.AZURE_STORAGE_ACCESS_KEY }}"
+      # Apply Terraform
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
         env:
