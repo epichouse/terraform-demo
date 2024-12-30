@@ -6,9 +6,10 @@ locals {
 }
 
 module "resource-group" {
+  count = 10
   source = "./modules/resource-group"
 
   project     = local.project
-  environment = local.environment
+  environment = format("%s-%s",local.environment,count.index)
   region      = local.region-primary
 }
