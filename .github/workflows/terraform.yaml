@@ -59,6 +59,14 @@ jobs:
     environment:
       name: production # Requires manual approval for this job
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Setup Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.6
       # Download the Terraform Plan
       - name: Download Plan
         uses: actions/download-artifact@v3
