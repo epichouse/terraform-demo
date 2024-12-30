@@ -8,16 +8,16 @@ provider "azurerm" {
 }
 
 locals {
-  region-primary = "UK South"
+  region-primary     = "UK South"
   region-alternative = "westeurope"
-  project = "demo"
-  environment = "demo"
+  project            = "demo"
+  environment        = "demo"
 }
 
 module "resource-group" {
   source = "./modules/resource-group"
-  
-  project = local.project
+
+  project     = local.project
   environment = local.environment
-  region = local.region-primary
+  region      = local.region-primary
 }
