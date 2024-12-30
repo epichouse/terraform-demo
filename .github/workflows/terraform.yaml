@@ -33,9 +33,7 @@ jobs:
 
       # Initialize Terraform
       - name: Terraform Init
-        run: terraform init -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}" \
-                            -backend-config="container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}" \
-                            -backend-config="key=demo.tfstate" \
+        run: terraform init -backend-config="container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}" -backend-config="key=demo.tfstate"
 
       # Plan Terraform
       - name: Terraform Plan
