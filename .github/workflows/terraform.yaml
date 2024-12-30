@@ -78,10 +78,8 @@ jobs:
           creds: ${{ secrets.AZURE_AUTHENTICATION }}
       # Initialize Terraform
       - name: Terraform Init
-        run: terraform init -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}" \
-                            -backend-config="container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}" \
-                            -backend-config="key=demo.tfstate" \
-                            -backend-config="access_key=${{ secrets.AZURE_STORAGE_ACCESS_KEY }}"
+        run: terraform init -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}" -backend-config="container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}" -backend-config="key=demo.tfstate" -backend-config="access_key=${{ secrets.AZURE_STORAGE_ACCESS_KEY }}"
+
       # Apply Terraform
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
