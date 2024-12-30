@@ -2,83 +2,24 @@ name: Terraform DESTROY
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  # Job for Terraform Init and Plan
-  plan:
-    name: Terraform Plan (DESTROY)
-    runs-on: ubuntu-latest
-    env:
-      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-    steps:
-      # Checkout the repository
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Setup Terraform
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.6
-
-      # Authenticate to Azure
-      - name: Azure Login
-        run: az login --service-principal -u ${{secrets.ARM_CLIENT_ID}} -p ${{ secrets.ARM_CLIENT_SECRET }} --tenant ${{ secrets.ARM_TENANT_ID }}
-      # Initialize Terraform
-      - name: Terraform Init
-        run: terraform init -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}" -backend-config="container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}" -backend-config="key=demo.tfstate" -backend-config="use_azuread_auth=true" -backend-config="client_secret=${{ secrets.ARM_CLIENT_SECRET }}" -backend-config="client_id=${{ secrets.ARM_CLIENT_ID }}"
-
-      # Plan Terraform
-      - name: Terraform Plan
-        run: terraform plan -out=tfplan -destroy
-
-
-      # Save the Terraform Plan
-      - name: Upload Plan for Apply
-        uses: actions/upload-artifact@v3
-        with:
-          name: tfplan
-          path: tfplan
-
-  # Job for Terraform Apply, requires approval
-  apply:
-    name: Terraform Apply (DESTROY)
-    runs-on: ubuntu-latest
-    needs: plan
-    environment:
-      name: production # Requires manual approval for this job
-    env:
-      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }} 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Setup Terraform
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.6
-      # Download the Terraform Plan
-      - name: Download Plan
-        uses: actions/download-artifact@v3
-        with:
-          name: tfplan
-
-      # Setup Terraform
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.6
-
-      # Authenticate to Azure
-      - name: Azure Login
-        run: az login --service-principal -u ${{secrets.ARM_CLIENT_ID}} -p ${{ secrets.ARM_CLIENT_SECRET }} --tenant ${{ secrets.ARM_TENANT_ID }}
-      # Initialize Terraform
-      - name: Terraform Init
-        run: terraform init -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}" -backend-config="container_name=${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}" -backend-config="key=demo.tfstate" -backend-config="use_azuread_auth=true" -backend-config="client_secret=${{ secrets.ARM_CLIENT_SECRET }}" -backend-config="client_id=${{ secrets.ARM_CLIENT_ID }}"
-
-      # Apply Terraform
-      - name: Terraform Apply
-        run: terraform apply -auto-approve "tfplan"
+  terraform:
+    uses: epichouse/workflow-templates/.github/workflows/terraform.yaml@main
+    with:
+        environment: production
+        mode: destroy
+    secrets:
+      mastertoken: ${{ secrets.MASTERTOKEN }}
+      arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
+      arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
+      arm_subscription_id: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      arm_tenant_id: ${{ secrets.ARM_TENANT_ID }}
+      azure_storage_account_name: ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
+      azure_storage_container_name: ${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}
