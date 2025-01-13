@@ -6,10 +6,19 @@ locals {
 }
 
 module "resource-group" {
-  count = 10
   source = "./modules/resource-group"
 
   project     = local.project
-  environment = format("%s-%s",local.environment,count.index)
+  environment = local.environment
   region      = local.region-primary
+}
+
+module "static-web-app-1" {
+  source = "./modules/static-web-app"
+
+  name = "demosite"
+  project = local.project
+  environment = local.environment
+  region = local.region-alternative
+  resource_group = module.resource-group.resource-group-name
 }
