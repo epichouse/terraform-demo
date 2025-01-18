@@ -1,10 +1,3 @@
-terraform {
-    required_providers {
-    proxmox = {
-      source = "bpg/proxmox"
-        }
-  }
-}
 resource "proxmox_virtual_environment_vm" "this" {
   name        = "vm-tf-ldn-test-01" # Change me
   agent {enabled = "true"}
