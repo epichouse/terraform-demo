@@ -17,18 +17,19 @@ resource "proxmox_virtual_environment_vm" "this" {
   initialization {
     datastore_id = "local-zfs"
     interface = "ide2"
+    upgrade = false
     ip_config {
       ipv4 {
         address = "10.100.0.104/24"
         gateway = "10.100.0.1"
       }
     }
-    #user_account {
-    #  keys = var.vm_sshkey
-    #  username = "dan"
-    #  password = var.vm_password
-#
-    #}
+    user_account {
+      keys = data.azurerm_key_vault_secret.this["proxmox-ssh-key"].value
+      username = "dan"
+      password = data.azurerm_key_vault_secret.this["proxmox-vm-password"].value
+
+    }
   }
   cpu {
     sockets = 1
@@ -36,7 +37,6 @@ resource "proxmox_virtual_environment_vm" "this" {
     type = "host"
     units = 1024
     architecture = "x86_64"
-    flags = []
   }
   memory {
     dedicated = 2048 # Change me
@@ -47,6 +47,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     bridge = "vmbr0"
     enabled = true
     firewall = false
+    disconnected = false
  #   vlan_id = var.vm_vlan
   }
   lifecycle {
@@ -59,11 +60,14 @@ resource "proxmox_virtual_environment_vm" "this" {
       vga,
       started,
       reboot,
+      cpu[0].architecture,
       memory[0].floating,
       startup,
       serial_device,
       disk,
       initialization[0].dns,
+      network_device.mac_address,
+      network_interface_names,
     ]
   }
 }
