@@ -25,7 +25,7 @@ resource "proxmox_virtual_environment_vm" "this" {
       }
     }
     user_account {
-      keys = data.azurerm_key_vault_secret.this["proxmox-ssh-key"].value
+      keys = [data.azurerm_key_vault_secret.this["proxmox-ssh-key"].value]
       username = "dan"
       password = data.azurerm_key_vault_secret.this["proxmox-vm-password"].value
 
