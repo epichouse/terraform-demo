@@ -4,11 +4,29 @@ secrets:
 
 ubuntu_virtual_machines:
   vm-tf-ldn-test-01:
-    id: 188
-    description: Test VM
+    id: 181
+    description: Test VM 1
     compute:
       cpus: 2
       memory: 2048
     network:
-      ip_address: 10.100.0.104/24
+      ip_address: 10.100.0.201/24
+      gateway: 10.100.0.1
+  vm-tf-ldn-test-02:
+    id: 182
+    description: Test VM 2
+    compute:
+      cpus: 2
+      memory: 2048
+    network:
+      ip_address: 10.100.0.202/24
+      gateway: 10.100.0.1
+  vm-tf-ldn-test-03:
+    id: 183
+    description: Test VM 3
+    compute:
+      cpus: 2
+      memory: 2048
+    network:
+      ip_address: 10.100.0.203/24
       gateway: 10.100.0.1
