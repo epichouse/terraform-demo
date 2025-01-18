@@ -36,6 +36,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     type = "host"
     units = 1024
     architecture = "x86_64"
+    flags = []
   }
   memory {
     dedicated = 2048 # Change me
@@ -48,22 +49,21 @@ resource "proxmox_virtual_environment_vm" "this" {
     firewall = false
  #   vlan_id = var.vm_vlan
   }
-  #lifecycle {
-  #  ignore_changes = [
-  #    efi_disk,
-  #    clone,
-  #    operating_system,
-  #    agent,
-  #    keyboard_layout,
-  #    vga,
-  #    started,
-  #    reboot,
-  #    cpu[0].architecture,
-  #    memory[0].floating,
-  #    startup,
-  #    serial_device,
-  #    disk,
-  #    initialization[0].dns,
-  #  ]
-  #}
+  lifecycle {
+    ignore_changes = [
+      efi_disk,
+      clone,
+      operating_system,
+      agent,
+      keyboard_layout,
+      vga,
+      started,
+      reboot,
+      memory[0].floating,
+      startup,
+      serial_device,
+      disk,
+      initialization[0].dns,
+    ]
+  }
 }
