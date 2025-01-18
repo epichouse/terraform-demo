@@ -66,7 +66,7 @@ resource "proxmox_virtual_environment_vm" "this" {
       serial_device,
       disk,
       initialization[0].dns,
-      network_device.mac_address,
+      network_device[0].mac_address,
       network_interface_names,
     ]
   }
