@@ -1,2 +1,3 @@
 secrets:
   -  "proxmox-vm-password"
+  -  "proxmox-ssh-key"
