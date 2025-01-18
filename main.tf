@@ -4,7 +4,7 @@ resource "proxmox_virtual_environment_vm" "this" {
   node_name = "srv-pve-prod-01" # Change me
   description = "Test VM" # Change me
   vm_id     = 188 # Change me
-  tags        = "testing,services"
+  tags        = "testing"
   on_boot = false
   started = false
   bios = "ovmf"  
