@@ -9,6 +9,7 @@ jobs:
     with:
         environment: production
         mode: destroy
+        site: test
     secrets:
       mastertoken: ${{ secrets.MASTERTOKEN }}
       arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
