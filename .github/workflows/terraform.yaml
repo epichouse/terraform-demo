@@ -15,7 +15,7 @@ jobs:
     with:
         environment: production
         mode: deploy
-        site: london
+        site: "london"
     secrets:
       mastertoken: ${{ secrets.MASTERTOKEN }}
       arm_client_id: ${{ secrets.ARM_CLIENT_ID }}
