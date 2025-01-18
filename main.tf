@@ -19,7 +19,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     interface = "ide2"
     ip_config {
       ipv4 {
-        address = "10.100.0.104"
+        address = "10.100.0.104/24"
         gateway = "10.100.0.1"
       }
     }
