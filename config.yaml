@@ -1,3 +1,14 @@
 secrets:
   -  "proxmox-vm-password"
   -  "proxmox-ssh-key"
+
+ubuntu_virtual_machines:
+  vm-tf-ldn-test-01:
+    id: 188
+    description: Test VM
+    compute:
+      cpus: 2
+      memory: 2048
+    network:
+      ip_address: 10.100.0.104/24
+      gateway: 10.100.0.1

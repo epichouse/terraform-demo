@@ -1,9 +1,10 @@
 resource "proxmox_virtual_environment_vm" "this" {
-  name        = "vm-tf-ldn-test-01" # Change me
+  for_each = local.config.ubuntu_virtual_machines
+  name        = each.key
   agent {enabled = "true"}
   node_name = "srv-pve-prod-01" # Change me
-  description = "Test VM" # Change me
-  vm_id     = 188 # Change me
+  description = each.value.description
+  vm_id     = each.value.id
   tags        = ["testing"]
   on_boot = false
   started = false
@@ -20,8 +21,8 @@ resource "proxmox_virtual_environment_vm" "this" {
     upgrade = false
     ip_config {
       ipv4 {
-        address = "10.100.0.104/24"
-        gateway = "10.100.0.1"
+        address = each.value.network.ip_address
+        gateway = each.value.network.gateway
       }
     }
     user_account {
@@ -33,14 +34,14 @@ resource "proxmox_virtual_environment_vm" "this" {
   }
   cpu {
     sockets = 1
-    cores = 2 # Change me
+    cores = each.value.compute.cpus
     type = "host"
     units = 1024
     architecture = "x86_64"
   }
   memory {
-    dedicated = 2048 # Change me
-    floating = 2048 # Change me
+    dedicated = each.value.compute.memory
+    floating = each.value.compute.memory
     shared = 0
   }
   network_device {
