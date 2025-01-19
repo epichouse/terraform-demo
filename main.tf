@@ -46,11 +46,11 @@ resource "proxmox_virtual_environment_vm" "this" {
   dynamic "network_device" {
     for_each = each.value.network_devices
       content {
-        bridge = network_devices.key
-        enabled = network_devices.value.enabled
-        firewall = network_devices.value.firewall
-        disconnected = network_devices.value.disconnected
-        vlan_id = network_devices.value.vlan_id
+        bridge = network_device.key
+        enabled = network_device.value.enabled
+        firewall = network_device.value.firewall
+        disconnected = network_device.value.disconnected
+        vlan_id = network_device.value.vlan_id
       }
   }
   lifecycle {
