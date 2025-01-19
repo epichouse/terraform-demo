@@ -46,7 +46,7 @@ resource "proxmox_virtual_environment_vm" "this" {
   }
   dynamic "network_device" {
     for_each = each.value.network_devices
-      content = {
+      content {
         bridge = each.key
         enabled = each.value.enabled
         firewall = each.value.firewall
