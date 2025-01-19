@@ -12,6 +12,17 @@ ubuntu_virtual_machines:
     network:
       ip_address: 10.100.0.201/24
       gateway: 10.100.0.1
+    network_devices:
+      vmbr0:
+        enabled: true
+        firewall: false
+        disconnected: false
+        vlan_id: ""
+      vmbr1:
+        enabled: true
+        firewall: false
+        disconnected: false
+        vlan_id: "111"
   vm-tf-ldn-test-02:
     id: 182
     description: Test VM 2
@@ -21,6 +32,12 @@ ubuntu_virtual_machines:
     network:
       ip_address: 10.100.0.202/24
       gateway: 10.100.0.1
+    network_devices:
+      vmbr0:
+        enabled: true
+        firewall: false
+        disconnected: false
+        vlan_id: ""
   vm-tf-ldn-test-03:
     id: 183
     description: Test VM 3
@@ -30,3 +47,9 @@ ubuntu_virtual_machines:
     network:
       ip_address: 10.100.0.203/24
       gateway: 10.100.0.1
+    network_devices:
+      vmbr0:
+        enabled: true
+        firewall: false
+        disconnected: false
+        vlan_id: ""
