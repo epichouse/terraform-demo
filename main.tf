@@ -29,7 +29,6 @@ resource "proxmox_virtual_environment_vm" "this" {
       keys = [data.azurerm_key_vault_secret.this["proxmox-ssh-key"].value]
       username = "dan"
       password = data.azurerm_key_vault_secret.this["proxmox-vm-password"].value
-
     }
   }
   cpu {
@@ -47,11 +46,11 @@ resource "proxmox_virtual_environment_vm" "this" {
   dynamic "network_device" {
     for_each = each.value.network_devices
       content {
-        bridge = each.key
-        enabled = each.value.enabled
-        firewall = each.value.firewall
-        disconnected = each.value.disconnected
-        vlan_id = each.value.vlan_id
+        bridge = network_devices.key
+        enabled = network_devices.value.enabled
+        firewall = network_devices.value.firewall
+        disconnected = network_devices.value.disconnected
+        vlan_id = network_devices.value.vlan_id
       }
   }
   lifecycle {
