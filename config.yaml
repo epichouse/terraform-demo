@@ -17,12 +17,12 @@ ubuntu_virtual_machines:
         enabled: true
         firewall: false
         disconnected: false
-        vlan_id: ""
+        vlan_id: null
       vmbr1:
         enabled: true
         firewall: false
         disconnected: false
-        vlan_id: "111"
+        vlan_id: null
   vm-tf-ldn-test-02:
     id: 182
     description: Test VM 2
@@ -37,7 +37,7 @@ ubuntu_virtual_machines:
         enabled: true
         firewall: false
         disconnected: false
-        vlan_id: ""
+        vlan_id: null
   vm-tf-ldn-test-03:
     id: 183
     description: Test VM 3
@@ -52,4 +52,4 @@ ubuntu_virtual_machines:
         enabled: true
         firewall: false
         disconnected: false
-        vlan_id: ""
+        vlan_id: null
